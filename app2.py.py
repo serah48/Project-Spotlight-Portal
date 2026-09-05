@@ -392,6 +392,67 @@ else:
                         "content": ann_content
                     })
                     st.success("✅ Published announcement directly to student portal.")
+                    # ==========================================
+# 🌟 SANDY THE STARFISH AI ASSISTANT
+# ==========================================
+st.sidebar.markdown("---")
+st.sidebar.subheader("⭐ Sandy AI Assistant")
+
+# Initialize chat history so Sandy remembers messages
+if "sandy_messages" not in st.session_state:
+    st.session_state.sandy_messages = [
+        {"role": "assistant", "content": "⭐ **Hey there! I'm Sandy the Starfish!** 🌊\nHow can I help you navigate school today?"}
+    ]
+
+# Button in sidebar to open/toggle the chat panel
+if "open_sandy_chat" not in st.session_state:
+    st.session_state.open_sandy_chat = False
+
+if st.sidebar.button("💬 Chat with Sandy", use_container_width=True):
+    st.session_state.open_sandy_chat = not st.session_state.open_sandy_chat
+
+# Main Chat Panel Window
+if st.session_state.open_sandy_chat:
+    st.markdown("---")
+    
+    # Header with a close button
+    col_title, col_close = st.columns([5, 1])
+    with col_title:
+        st.markdown("### ⭐ Sandy AI — School Assistant")
+    with col_close:
+        if st.button("❌ Close"):
+            st.session_state.open_sandy_chat = False
+            st.rerun()
+
+    # Display previous messages
+    for message in st.session_state.sandy_messages:
+        with st.chat_message(message["role"], avatar="⭐" if message["role"] == "assistant" else "👤"):
+            st.markdown(message["content"])
+
+    # Input field for typing questions
+    if prompt := st.chat_input("Ask Sandy anything about school, clubs, or exams..."):
+        # Add user message
+        st.session_state.sandy_messages.append({"role": "user", "content": prompt})
+        with st.chat_message("user", avatar="👤"):
+            st.markdown(prompt)
+
+        # Generate smart response
+        prompt_lower = prompt.lower()
+        if "club" in prompt_lower or "interest" in prompt_lower:
+            reply = "⭐ **Sandy:** Check out the **Interest Matcher** tab! I can help you find robotics, art, or sports clubs based on what you love."
+        elif "exam" in prompt_lower or "test" in prompt_lower or "schedule" in prompt_lower:
+            reply = "⭐ **Sandy:** You can find your full study schedule and upcoming test dates under the **Academic Roadmap** tab."
+        elif "feedback" in prompt_lower or "anonymous" in prompt_lower or "privacy" in prompt_lower:
+            reply = "⭐ **Sandy:** Your feedback is completely pseudonymized! Go to the **Feedback Channel** tab to share thoughts safely without revealing your real name."
+        elif any(w in prompt_lower for w in ["hi", "hello", "hey"]):
+            reply = "⭐ **Sandy:** Hey! Excited to help. What are you looking for on the portal today?"
+        else:
+            reply = f"⭐ **Sandy:** Great question! Regarding '{prompt}', you can explore the tabs above or drop a note in our secure feedback channel!"
+
+        # Add assistant response
+        st.session_state.sandy_messages.append({"role": "assistant", "content": reply})
+        with st.chat_message("assistant", avatar="⭐"):
+            st.markdown(reply)
 
     elif pass_key != "":
         st.error("🚫 Invalid Clearance Key.")
